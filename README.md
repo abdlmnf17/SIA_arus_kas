@@ -46,7 +46,6 @@
 
 ## Fitur-Fitur
 
-- Transaksi Penggajian
 - Data Master (Pasien, Pemasok, Barang, Obat dll...)
 - Kelola Transaksi Kas
 - Kelola jurnal umum, akuntansi dan laporan
