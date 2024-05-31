@@ -1,3 +1,72 @@
+# Aplikasi Pengelolaan Arus Kas Pada Klinik Berbasis Web - Sistem Informasi Akuntansi
+
+## Instalasi Tools (Localhost)
+
+- CMD / Terminal
+- VSCODE / Text Editor lain
+- XAMPP (PHP 7.3 - 8.2) / Laragon (PHP 7.3 - 8.2)
+- Composer
+
+## Cara Pasang
+
+1. Clone projek melalui terminal / command prompt / git bash dengan perintah:
+   ```bash
+   git clone https://github.com/abdlmnf17/SIA_arus_kas.git
+   ```
+
+2. Pindahkan folder (SIA_arus_kas) hasil clone ke direktori Xampp/htdocs/disini jika memakai xampp dan ke /laragon/www/disini jka memakai laragon.
+
+3. Buka Vscode, buka folder dan pilih SIA_arus_kas yang tadi sudah di-clone.
+
+4. Buka terminal di Vscode, ketik `composer install`, lalu tunggu sampai selesai.
+5. Pastikan sukses dan berhasil 
+
+6. Setelah itu cari file env.example paling bawah, copy dan paste di tempat itu juga, lalu ubah namanya env.examplecopy menjadi`.env`, lalu ketik di terminal `php artisan key:generate`,
+
+7. Masuk ke dalam .env dan ubah bagian `DB_DATABASE=`, menjadi nama database yang akan digunakan, contohnya `DB_DATABASE=klinik`. Lalu ubah juga APP_NAME dengan nama aplikasinya, jika ingin mengcustom namanya, lalu untuk isi NAMA_PERUSAHAAN juga silahkan ubah jika ingin memakai nama perusahaan lain. Lalu setelah itu ketik `php artisan config:cache`.
+
+8. Buka phpMyAdmin, buat database baru berdasarkan nama yang ada di `.env`, yaitu `klinik`.
+
+9. Kembali ke Vscode, tambahkan terminal baru, ketik `php artisan migrate`, dan tunggu migrasi sampai selesai.
+
+10. Setelah itu, instalasi user admin dengan seeder. Buka folder `database/seeder/AdminRoleSeeder.php`.
+
+11. Ubah informasi admin, seperti nama, email, dan password.
+
+12. Jalankan perintah di terminal Vscode:
+    ```bash
+    php artisan db:seed
+    ```
+
+13. Tunggu sampai selesai. Setelah itu, ketik `php artisan config:cache`.
+
+14. Setelah selesai, ketik `php artisan serve`.
+
+15. Selesai! Buka link [localhost:8000](http://localhost:8000) dan login sebagai admin.
+
+## Fitur-Fitur
+
+- Transaksi Penggajian
+- Data Master (Pasien, Pemasok, Barang, Obat dll...)
+- Kelola Transaksi Kas
+- Kelola jurnal umum, akuntansi dan laporan
+- dll...
+
+<br/>
+
+## Projek ini dibuat dengan Laravel 8
+
+
+
+
+
+
+
+
+
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
@@ -42,10 +111,7 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - **[Many](https://www.many.co.uk)**
 - **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
 - **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
 - **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
 
 ## Contributing
 
