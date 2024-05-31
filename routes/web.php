@@ -26,3 +26,4 @@ Route::resource('pasien',App\Http\Controllers\PasienController::class);
 Route::resource('pemasok',App\Http\Controllers\PemasokController::class);
 Route::resource('obat',App\Http\Controllers\ObatController::class);
 Route::resource('barang',App\Http\Controllers\BarangController::class);
+Route::resource('akun',App\Http\Controllers\AkunController::class);
