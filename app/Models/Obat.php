@@ -11,4 +11,9 @@ class Obat extends Model
     protected $table = 'obat';
 
     protected $fillable = ['nm_obat', 'satuan', 'harga'];
+
+    public function detailMasuk()
+    {
+        return $this->hasMany(DetailMasuk::class);
+    }
 }

@@ -124,8 +124,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Data Transaksi</h6>
-                        <a class="collapse-item" href="/kasmasuk">Kas Masuk</a>
-                        <a class="collapse-item" href="/kaskeluar">Kas Keluar</a>
+                        <a class="collapse-item" href="/transaksi_masuk">Kas Masuk</a>
+                        <a class="collapse-item" href="/transaksi_keluar">Kas Keluar</a>
                     </div>
                 </div>
             </li>

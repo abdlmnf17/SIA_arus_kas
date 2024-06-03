@@ -89,7 +89,6 @@
 
 
 
-
             <div class="welcome-links text-center">
                 @if (Route::has('login'))
                     @auth

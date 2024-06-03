@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TransaksiMasukController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,3 +29,6 @@ Route::resource('pemasok',App\Http\Controllers\PemasokController::class);
 Route::resource('obat',App\Http\Controllers\ObatController::class);
 Route::resource('barang',App\Http\Controllers\BarangController::class);
 Route::resource('akun',App\Http\Controllers\AkunController::class);
+Route::resource('transaksi_masuk',App\Http\Controllers\TransaksiMasukController::class);
+Route::get('/search-pasien', [TransaksiMasukController::class, 'searchPasien'])->name('search.pasien');
+

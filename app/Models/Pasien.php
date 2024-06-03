@@ -11,4 +11,9 @@ class Pasien extends Model
     protected $table = 'pasien';
 
     protected $fillable = ['nm_pasien', 'umur', 'alamat', 'tensi'];
+
+    public function transaksiMasuk()
+    {
+        return $this->hasMany(TransaksiMasuk::class);
+    }
 }
