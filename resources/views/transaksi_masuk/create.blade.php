@@ -4,20 +4,26 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Transaksi Kas Masuk</div>
+            <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <a href="{{ route('transaksi_masuk.index') }}" class="btn btn-primary float-right">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h4 class="m-15 font-weight-bold">TAMBAH TRANSAKSI MASUK</h4>
+            </div>
+
 
                 <div class="card-body">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
                                 @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
+                                <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
                         </div>
                     @endif
-                    
+
                     <form action="{{ route('transaksi_masuk.store') }}" method="POST" id="transaksiForm">
                         @csrf
 
@@ -38,7 +44,6 @@
                                 <div id="pasienList" class="dropdown-menu"></div>
 
                                 <input type="hidden" name="pasien_id" id="pasien_id">
-
                             </div>
                         </div>
 
@@ -72,7 +77,12 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="total">Total:</label>
+                            <label for="jumlah_periksa">Harga Periksa:</label>
+                            <input type="number" id="jumlah_periksa" class="form-control" placeholder="Masukan harga periksa pasien" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="total">Subtotal:</label>
                             <input type="number" name="total" id="total" class="form-control" value="{{ old('total') }}" required>
                         </div>
 
@@ -82,6 +92,8 @@
             </div>
         </div>
     </div>
+    </div>
+</div>
 </div>
 
 <!-- Confirmation Modal -->
@@ -132,7 +144,6 @@
                             });
                             pasienList.style.display = 'block';
                         } else {
-
                             pasienList.innerHTML = '<div class="list-group-item">Tidak ditemukan</div>';
                         }
                     });
@@ -199,14 +210,18 @@
                 var jumlahInput = row.querySelector('.jumlah-obat');
                 var harga = parseFloat(obatSelect.options[obatSelect.selectedIndex].getAttribute('data-harga')) || 0;
                 var jumlah = parseFloat(jumlahInput.value) || 0;
-                total += harga * jumlah
                 total += harga * jumlah;
             });
+
+            var jumlahPeriksa = parseFloat(document.getElementById('jumlah_periksa').value) || 0;
+            total += jumlahPeriksa;
+
             document.getElementById('total').value = total.toFixed(2);
         }
 
-        // Attach event listeners to the initial row
+        // Attach event listeners to the initial row and jumlah periksa
         attachEventListeners(document.querySelector('.obat-row'));
+        document.getElementById('jumlah_periksa').addEventListener('input', updateTotal);
 
         // Show confirmation modal
         showConfirmModalButton.addEventListener('click', function() {

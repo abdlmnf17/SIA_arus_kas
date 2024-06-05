@@ -7,6 +7,7 @@ use App\Models\TransaksiMasuk;
 use App\Models\DetailMasuk;
 use App\Models\Obat;
 use App\Models\Pasien;
+use PDF;
 
 class TransaksiMasukController extends Controller
 {
@@ -21,7 +22,7 @@ class TransaksiMasukController extends Controller
     {
         $obat = Obat::all();
         $pasien = Pasien::all();
-        return view('transaksi_masuk.create', compact('obat','pasien'));
+        return view('transaksi_masuk.create', compact('obat', 'pasien'));
     }
 
     public function store(Request $request)
@@ -37,7 +38,7 @@ class TransaksiMasukController extends Controller
             'no_trans' => 'required|string|unique:transaksi_masuk,no_trans|max:255',
             'tgl' => 'required|date',
             'pasien_id' => 'required|integer|exists:pasien,id',
-            'obat_ids.*' => 'required|integer|exists:obat,id',
+            'obat_ids.*' => 'integer|exists:obat,id',
             'jumlah.*' => 'required|integer|min:1',
             'keterangan' => 'required|string|max:255',
             'total' => 'required|numeric|min:0',
@@ -62,15 +63,29 @@ class TransaksiMasukController extends Controller
         ]);
 
         // Membuat detail masuk
-        foreach ($request->obat_ids as $obat_id) {
+        foreach ($request->obat_ids as $index => $obat_id) {
+            $jumlah = $request->jumlah[$index];
+
             DetailMasuk::create([
                 'transaksi_masuk_id' => $transaksi->id,
                 'obat_id' => $obat_id,
             ]);
+
+            // Mengurangi stok obat
+            $obat = Obat::findOrFail($obat_id);
+            $obat->satuan -= $jumlah;
+            $obat->save();
         }
 
         return redirect()->route('transaksi_masuk.index')->with('success', 'Transaksi berhasil disimpan');
     }
+
+    public function show($id)
+    {
+        $transaksi = TransaksiMasuk::with(['detailMasuk.obat', 'pasien'])->findOrFail($id);
+        return view('transaksi_masuk.detail', compact('transaksi'));
+    }
+
 
     public function destroy($id)
     {
@@ -80,10 +95,16 @@ class TransaksiMasukController extends Controller
     }
 
     public function searchPasien(Request $request)
-{
-    $search = $request->get('query');
-    $result = Pasien::where('nm_pasien', 'LIKE', '%' . $search . '%')->get();
-    return response()->json($result);
-}
+    {
+        $search = $request->get('query');
+        $result = Pasien::where('nm_pasien', 'LIKE', '%' . $search . '%')->get();
+        return response()->json($result);
+    }
 
+    public function print($id)
+    {
+        $transaksi = TransaksiMasuk::with(['detailMasuk.obat', 'pasien'])->findOrFail($id);
+        $pdf = PDF::loadView('transaksi_masuk.print', compact('transaksi'));
+        return $pdf->stream('invoice-transaksi.pdf');
+    }
 }

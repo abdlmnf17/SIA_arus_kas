@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="col-lg-10 mb-10 mx-auto">
+<div class="col-lg-11 mb-9 mx-auto">
     <!-- Project Card Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -26,25 +26,25 @@
             <table id="dataTable" class="table table-bordered" cellspacing="1"><br/>
                 <thead>
                     <tr align="center">
-                        <th style="width: 5%">#</th>
-                        <th style="width: 20%">No Transaksi</th>
-                        <th style="width: 20%">Tanggal</th>
-                        <th style="width: 25%">Pasien</th>
-                        <th style="width: 20%">Total</th>
-                        <th style="width: 10%">Aksi</th>
+                        <th style="width: 5%">Tanggal</th>
+                        <th style="width: 10%">No Transaksi</th>
+                        <th style="width: 25%">Keterangan</th>
+                        <th style="width: 10%">Pasien</th>
+                        <th style="width: 15%">Total</th>
+                        <th style="width: 15%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($transaksi_masuk as $index => $transaksi)
+                    @foreach($transaksi_masuk as $transaksi)
                     <tr align="center">
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $transaksi->no_trans }}</td>
                         <td>{{ $transaksi->tgl }}</td>
+                        <td>{{ $transaksi->no_trans }}</td>
+                        <td>{{ $transaksi->keterangan }}</td>
                         <td>{{ $transaksi->pasien->nm_pasien }}</td>
                         <td>Rp. {{ number_format($transaksi->total, 2, ',', '.') }}</td>
                         <td>
-                            <a href="{{ route('transaksi_masuk.edit', $transaksi->id) }}" class="btn btn-sm btn-warning">
-                                <i class="fas fa-edit"></i> Edit
+                            <a href="{{ route('transaksi_masuk.show', $transaksi->id) }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-print"></i> Detail
                             </a>
                             <!-- Tombol Hapus -->
                             <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirmDeleteModal{{ $transaksi->id }}">
