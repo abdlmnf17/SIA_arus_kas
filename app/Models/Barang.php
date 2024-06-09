@@ -11,4 +11,9 @@ class Barang extends Model
     protected $table = 'barang';
 
     protected $fillable = ['nm_brg', 'satuan', 'harga'];
+
+    public function detailKeluar()
+    {
+        return $this->hasMany(DetailKeluar::class);
+    }
 }

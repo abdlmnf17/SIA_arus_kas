@@ -16,4 +16,8 @@ class Obat extends Model
     {
         return $this->hasMany(DetailMasuk::class);
     }
+    public function detailKeluar()
+    {
+        return $this->hasMany(DetailKeluar::class);
+    }
 }

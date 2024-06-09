@@ -11,4 +11,10 @@ class Akun extends Model
     protected $table = 'akun';
 
     protected $fillable = ['nm_akun', 'jenis', 'total'];
+    public function jurnal()
+    {
+        return $this->hasMany(Jurnal::class);
+    }
+
+
 }

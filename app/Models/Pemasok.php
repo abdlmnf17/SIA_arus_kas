@@ -11,4 +11,9 @@ class Pemasok extends Model
     protected $table = 'pemasok';
 
     protected $fillable = ['nm_pemasok', 'alamat', 'keterangan'];
+
+    public function transaksiKeluar()
+    {
+        return $this->hasMany(TransaksiKeluar::class);
+    }
 }

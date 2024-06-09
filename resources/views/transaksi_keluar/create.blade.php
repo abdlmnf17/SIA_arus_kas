@@ -6,12 +6,11 @@
             <div class="col-md-8">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <a href="{{ route('transaksi_masuk.index') }}" class="btn btn-primary float-right">
+                        <a href="{{ route('transaksi_keluar.index') }}" class="btn btn-primary float-right">
                             <i class="fas fa-arrow-left"></i>
                         </a>
-                        <h4 class="m-15 font-weight-bold">TAMBAH TRANSAKSI MASUK</h4>
+                        <h4 class="m-15 font-weight-bold">TAMBAH TRANSAKSI KELUAR</h4>
                     </div>
-
 
                     <div class="card-body">
                         @if ($errors->any())
@@ -24,17 +23,13 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('transaksi_masuk.store') }}" method="POST" id="transaksiForm">
+                        <form action="{{ route('transaksi_keluar.store') }}" method="POST" id="transaksiForm">
                             @csrf
 
                             <div class="form-group">
                                 <label for="no_trans">No Transaksi:</label>
-                                <!-- Hidden input field untuk menyimpan nomor transaksi yang telah digenerate -->
-                                <input type="hidden" name="no_trans_generated" id="no_trans_generated"
-                                    value="{{ old('no_trans_generated') }}">
-                                <!-- Input field untuk menampilkan nomor transaksi di form -->
                                 <input type="text" name="no_trans" id="no_trans" class="form-control"
-                                    value="{{ $no_trans }}" required>
+                                    value="{{ old('no_trans') }}" required>
                             </div>
 
                             <div class="form-group">
@@ -44,16 +39,43 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="pasien_id" class="col-md-4 col-form-label text-md-end">Pasien</label>
+                                <label for="pemasok_id" class="col-md-4 col-form-label text-md-end">Pemasok</label>
                                 <div class="col-md-6">
-                                    <input type="text" id="nm_pasien" class="form-control" name="nm_pasien"
-                                        autocomplete="off" placeholder="Masukkan Nama Pasien" required>
-                                    <div id="pasienList" class="dropdown-menu"></div>
+                                    <input type="text" id="nm_pemasok" class="form-control" name="nm_pemasok"
+                                        autocomplete="off" placeholder="Masukkan Nama Pemasok" required>
+                                    <div id="pemasokList" class="dropdown-menu"></div>
 
-                                    <input type="hidden" name="pasien_id" id="pasien_id">
+                                    <input type="hidden" name="pemasok_id" id="pemasok_id">
                                 </div>
                             </div>
 
+                            <div id="barang-container">
+                                <div class="row mb-3 barang-row">
+                                    <label for="barang_1" class="col-md-4 col-form-label text-md-end">Barang 1</label>
+                                    <div class="col-md-4">
+                                        <select id="barang_1" class="form-control barang-select" name="barang_ids[]"
+                                            data-harga="0" required>
+                                            <option value="">Pilih Barang</option>
+                                            @foreach ($barang as $b)
+                                                <option value="{{ $b->id }}" data-harga="{{ $b->harga }}">
+                                                    {{ $b->nm_brg }} | Rp. {{ number_format($b->harga), '2',',','.' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" name="jumlahBarang[]" class="form-control jumlah-barang"
+                                            placeholder="Jumlah" min="1" value="1" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-primary" id="addBarang">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Obat -->
                             <div id="obat-container">
                                 <div class="row mb-3 obat-row">
                                     <label for="obat_1" class="col-md-4 col-form-label text-md-end">Obat 1</label>
@@ -63,7 +85,7 @@
                                             <option value="">Pilih Obat</option>
                                             @foreach ($obat as $o)
                                                 <option value="{{ $o->id }}" data-harga="{{ $o->harga }}">
-                                                    {{ $o->nm_obat }}
+                                                    {{ $o->nm_obat }} | Rp. {{ number_format($o->harga), '2',',','.' }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -79,6 +101,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- End Form Obat -->
 
                             <div class="form-group">
                                 <label for="keterangan">Keterangan:</label>
@@ -87,14 +110,15 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="jumlah_periksa">Harga Periksa:</label>
+                                <label for="jumlah_periksa">Harga Lainnya:</label>
                                 <input type="number" id="jumlah_periksa" class="form-control"
-                                    placeholder="Masukan harga periksa pasien" min="0" step="0.01">
+                                    placeholder="Contoh: harga pajak, dan lain lain (ketik 0 jika tidak ada)"
+                                    min="0" step="0.01">
                             </div>
 
                             <div class="form-group">
                                 <label for="total">Subtotal:</label>
-                                <input type="number" name="total" id="total" class="form-control"
+                                Rp. <input type="number" name="total" id="total" class="form-control"
                                     value="{{ old('total') }}" required>
                             </div>
 
@@ -104,8 +128,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>
     </div>
 
     <!-- Confirmation Modal -->
@@ -132,46 +154,79 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var nmPasienInput = document.getElementById('nm_pasien');
-            var pasienList = document.getElementById('pasienList');
-            var pasienIdInput = document.getElementById('pasien_id');
-            var showConfirmModalButton = document.getElementById('showConfirmModal');
+            var nmPemasokInput = document.getElementById('nm_pemasok');
+            var pemasokList = document.getElementById('pemasokList');
+            var pemasokIdInput = document.getElementById('pemasok_id');
+            var showConfirmModalButton =
+                document.getElementById('showConfirmModal');
             var confirmSubmitButton = document.getElementById('confirmSubmit');
             var transaksiForm = document.getElementById('transaksiForm');
 
-            nmPasienInput.addEventListener('keyup', function() {
-                var query = nmPasienInput.value;
+            nmPemasokInput.addEventListener('keyup', function() {
+                var query = nmPemasokInput.value;
                 if (query.length > 1) {
-                    fetch(`/search-pasien?query=${query}`)
+                    fetch(`/search-pemasok?query=${query}`)
                         .then(response => response.json())
                         .then(data => {
-                            pasienList.innerHTML = '';
+                            pemasokList.innerHTML = '';
                             if (data.length > 0) {
-                                data.forEach(pasien => {
+                                data.forEach(pemasok => {
                                     var option = document.createElement('a');
                                     option.classList.add('dropdown-item');
                                     option.href = '#';
-                                    option.textContent = pasien.nm_pasien;
-                                    option.dataset.id = pasien.id;
-                                    pasienList.appendChild(option);
+                                    option.textContent = pemasok.nm_pemasok;
+                                    option.dataset.id = pemasok.id;
+                                    pemasokList.appendChild(option);
                                 });
-                                pasienList.style.display = 'block';
+                                pemasokList.style.display = 'block';
                             } else {
-                                pasienList.innerHTML =
+                                pemasokList.innerHTML =
                                     '<div class="list-group-item">Tidak ditemukan</div>';
                             }
                         });
                 } else {
-                    pasienList.innerHTML = '';
+                    pemasokList.innerHTML = '';
                 }
             });
 
-            pasienList.addEventListener('click', function(e) {
+            pemasokList.addEventListener('click', function(e) {
                 if (e.target && e.target.nodeName == "A") {
-                    nmPasienInput.value = e.target.textContent;
-                    pasienIdInput.value = e.target.dataset.id;
-                    pasienList.style.display = 'none';
+                    nmPemasokInput.value = e.target.textContent;
+                    pemasokIdInput.value = e.target.dataset.id;
+                    pemasokList.style.display = 'none';
                 }
+            });
+
+            // Additional code for adding and removing barang rows, and updating total
+            var barangContainer = document.getElementById('barang-container');
+            var addButtonBarang = document.getElementById('addBarang');
+            var barangCount = 1;
+
+            addButtonBarang.addEventListener('click', function() {
+                barangCount++;
+                var newRow = document.createElement('div');
+                newRow.classList.add('row', 'mb-3', 'barang-row');
+                newRow.innerHTML = `
+                <label for="barang_${barangCount}" class="col-md-4 col-form-label text-md-end">Barang ${barangCount}</label>
+                <div class="col-md-4">
+                    <select id="barang_${barangCount}" class="form-control barang-select" name="barang_ids[]" data-harga="0" required>
+                        <option value="">Pilih Barang</option>
+                        @foreach ($barang as $b)
+                            <option value="{{ $b->id }}" data-harga="{{ $b->harga }}">
+                                {{ $b->nm_brg }} | {{ $b->harga }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="jumlahBarang[]" class="form-control jumlah-barang" placeholder="Jumlah" min="1" value="1" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger" onclick="removeBarang(this)"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+                barangContainer.appendChild(newRow);
+                attachEventListeners(newRow);
             });
 
             // Additional code for adding and removing obat rows, and updating total
@@ -190,7 +245,7 @@
                         <option value="">Pilih Obat</option>
                         @foreach ($obat as $o)
                             <option value="{{ $o->id }}" data-harga="{{ $o->harga }}">
-                                {{ $o->nm_obat }}
+                                {{ $o->nm_obat }} | {{ $o->harga }}
                             </option>
                         @endforeach
                     </select>
@@ -203,7 +258,7 @@
                 </div>
             `;
                 obatContainer.appendChild(newRow);
-                attachEventListeners(newRow);
+                attachEventListenersObat(newRow);
             });
 
             window.removeObat = function(btn) {
@@ -211,13 +266,43 @@
                 updateTotal();
             };
 
-            function attachEventListeners(row) {
+            function attachEventListenersObat(row) {
                 row.querySelector('.obat-select').addEventListener('change', updateTotal);
                 row.querySelector('.jumlah-obat').addEventListener('input', updateTotal);
             }
 
+            // Attach event listeners to the initial row and jumlah periksa
+            attachEventListeners(document.querySelector('.barang-row'));
+            attachEventListenersObat(document.querySelector('.obat-row'));
+            document.getElementById('jumlah_periksa').addEventListener('input', updateTotal);
+
+
+            window.removeBarang = function(btn) {
+                btn.closest('.barang-row').remove();
+                updateTotal();
+            };
+
+            function attachEventListeners(row) {
+                row.querySelector('.barang-select').addEventListener('change', updateTotal);
+                row.querySelector('.jumlah-barang').addEventListener('input', updateTotal);
+            }
+
+
+
+
+
             function updateTotal() {
                 var total = 0;
+                var barangRows = document.querySelectorAll('.barang-row');
+                barangRows.forEach(function(row) {
+                    var barangSelect = row.querySelector('.barang-select');
+                    var jumlahInput = row.querySelector('.jumlah-barang');
+                    var harga = parseFloat(barangSelect.options[barangSelect.selectedIndex].getAttribute(
+                        'data-harga')) || 0;
+                    var jumlahBarang = parseFloat(jumlahInput.value) || 0;
+                    total += harga * jumlahBarang;
+                });
+
                 var obatRows = document.querySelectorAll('.obat-row');
                 obatRows.forEach(function(row) {
                     var obatSelect = row.querySelector('.obat-select');
@@ -234,9 +319,8 @@
                 document.getElementById('total').value = total.toFixed(2);
             }
 
-            // Attach event listeners to the initial row and jumlah periksa
-            attachEventListeners(document.querySelector('.obat-row'));
-            document.getElementById('jumlah_periksa').addEventListener('input', updateTotal);
+
+
 
             // Show confirmation modal
             showConfirmModalButton.addEventListener('click', function() {
