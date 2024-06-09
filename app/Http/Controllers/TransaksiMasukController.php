@@ -8,6 +8,7 @@ use App\Models\DetailMasuk;
 use App\Models\Obat;
 use App\Models\Pasien;
 use App\Models\DetailTransaksi;
+use App\Models\Jurnal;
 use PDF;
 
 class TransaksiMasukController extends Controller
@@ -98,7 +99,7 @@ class TransaksiMasukController extends Controller
             'total' => $request->total,
         ]);
 
-        
+
 
 
         return redirect()->route('transaksi_masuk.index')->with('success', 'Transaksi berhasil disimpan');
@@ -113,11 +114,23 @@ class TransaksiMasukController extends Controller
 
 
     public function destroy($id)
-    {
-        $transaksi_masuk = TransaksiMasuk::findOrFail($id);
-        $transaksi_masuk->delete();
-        return redirect()->route('transaksi_masuk.index')->with('success', 'berhasil dihapus.');
-    }
+{
+    $transaksi_masuk = TransaksiMasuk::findOrFail($id);
+
+    // Hapus semua entri terkait dalam tabel 'jurnal' yang merujuk ke entri dalam tabel 'detail_transaksi'
+    $transaksi_masuk->detailTransaksi()->each(function ($detailTransaksi) {
+        $detailTransaksi->jurnal()->delete();
+    });
+
+    // Hapus semua entri dalam tabel 'detail_transaksi' yang terkait dengan transaksi masuk ini
+    $transaksi_masuk->detailTransaksi()->delete();
+
+    // Terakhir, hapus transaksi masuk itu sendiri
+    $transaksi_masuk->delete();
+
+    return redirect()->route('transaksi_masuk.index')->with('success', 'Transaksi berhasil dihapus.');
+}
+
 
     public function searchPasien(Request $request)
     {

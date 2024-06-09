@@ -9,6 +9,7 @@ use App\Models\Obat;
 use App\Models\Barang;
 use App\Models\Pemasok;
 use App\Models\DetailTransaksi;
+use App\Models\Akun;
 use PDF;
 use Illuminate\Contracts\View\View;
 
@@ -124,11 +125,23 @@ class TransaksiKeluarController extends Controller
     }
 
     public function destroy($id)
-    {
-        $transaksi_keluar = TransaksiKeluar::findOrFail($id);
-        $transaksi_keluar->delete();
-        return redirect()->route('transaksi_keluar.index')->with('success', 'Transaksi berhasil dihapus.');
-    }
+{
+    $transaksi_keluar = TransaksiKeluar::findOrFail($id);
+
+    // Hapus semua entri terkait dalam tabel 'jurnal' yang merujuk ke entri dalam tabel 'detail_transaksi'
+    $transaksi_keluar->detailTransaksi()->each(function ($detailTransaksi) {
+        $detailTransaksi->jurnal()->delete();
+    });
+
+    // Hapus semua entri dalam tabel 'detail_transaksi' yang terkait dengan transaksi keluar ini
+    $transaksi_keluar->detailTransaksi()->delete();
+
+    // Terakhir, hapus transaksi keluar itu sendiri
+    $transaksi_keluar->delete();
+
+    return redirect()->route('transaksi_keluar.index')->with('success', 'Transaksi berhasil dihapus.');
+}
+
 
     public function searchPemasok(Request $request)
     {

@@ -17,6 +17,9 @@ class TransaksiMasuk extends Model
         'tgl',
         'total',
     ];
+    // TransaksiMasuk.php
+
+
 
     public function pasien()
     {
@@ -29,6 +32,6 @@ class TransaksiMasuk extends Model
     }
     public function detailTransaksi()
     {
-        return $this->hasMany(DetailTransaksi::class, 'transaksi_masuk_id');
+        return $this->hasMany(DetailTransaksi::class);
     }
 }
