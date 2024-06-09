@@ -77,14 +77,21 @@ class JurnalController extends Controller
             }
         }
 
-        // Jika akun_id kredit ditemukan, tambahkan total
         if ($request->kredit) {
             $akun = Akun::where('nm_akun', $request->kredit)->first();
             if ($akun) {
-                $akun->total += $request->total;
+                if ($akun->nm_akun === 'Pendapatan') {
+                    // Jika nama akun adalah Pendapatan, tambahkan total
+                    $akun->total += $request->total;
+                } else {
+                    // Jika nama akun bukan Pendapatan, kurangi total
+                    $akun->total -= $request->total;
+                }
                 $akun->save();
             }
         }
+
+       
 
         return redirect()->route('jurnal.index')->with('success', 'Entri jurnal berhasil disimpan.');
     }

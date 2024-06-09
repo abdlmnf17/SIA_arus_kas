@@ -161,9 +161,14 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
+                <a class="nav-link" href="/jurnal">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Entri Jurnal</span></a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="/laporan">
                     <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Laporan Jurnal</span></a>
+                    <span>Laporan Kas</span></a>
             </li>
 
             <!-- Nav Item - Tables -->

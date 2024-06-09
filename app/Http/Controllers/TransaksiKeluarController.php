@@ -67,48 +67,47 @@ class TransaksiKeluarController extends Controller
 
 
 
-     // Membuat detail keluar
-if (count($request->obat_ids) !== count($request->barang_ids)) {
-    // Handle error
-    return redirect()->back()->withInput()->withErrors('Jumlah elemen dalam obat dan barang harus sama, silahkan pilih tambah "Tidak Ada" jika salah satu jumlahnya berbeda');
-} else {
+        // Membuat detail keluar
+        if (count($request->obat_ids) !== count($request->barang_ids)) {
+            // Handle error
+            return redirect()->back()->withInput()->withErrors('Jumlah elemen dalam obat dan barang harus sama, silahkan pilih tambah "Tidak Ada" jika salah satu jumlahnya berbeda');
+        } else {
 
-    $transaksi = TransaksiKeluar::create([
-        'no_trans' => $request->no_trans,
-        'keterangan' => $request->keterangan,
-        'pemasok_id' => $request->pemasok_id,
-        'tgl' => $request->tgl,
-        'total' => $request->total,
-    ]);
+            $transaksi = TransaksiKeluar::create([
+                'no_trans' => $request->no_trans,
+                'keterangan' => $request->keterangan,
+                'pemasok_id' => $request->pemasok_id,
+                'tgl' => $request->tgl,
+                'total' => $request->total,
+            ]);
 
-    for ($i = 0; $i < count($request->obat_ids); $i++) {
-        $obat_id = $request->obat_ids[$i];
-        $barang_id = $request->barang_ids[$i];
-        $jumlah = $request->jumlah[$i];
+            for ($i = 0; $i < count($request->obat_ids); $i++) {
+                $obat_id = $request->obat_ids[$i];
+                $barang_id = $request->barang_ids[$i];
+                $jumlah = $request->jumlah[$i];
 
-        DetailKeluar::create([
+                DetailKeluar::create([
+                    'transaksi_keluar_id' => $transaksi->id,
+                    'obat_id' => $obat_id,
+                    'barang_id' => $barang_id,
+                ]);
+
+                // Menambah stok obat
+                $obat = Obat::findOrFail($obat_id);
+                $obat->satuan += $jumlah;
+                $obat->save();
+
+                // Menambah stok barang
+                $barang = Barang::findOrFail($barang_id);
+                $barang->satuan += $jumlah;
+                $barang->save();
+            }
+        }
+
+        DetailTransaksi::create([
             'transaksi_keluar_id' => $transaksi->id,
-            'obat_id' => $obat_id,
-            'barang_id' => $barang_id,
+            'total' => $request->total,
         ]);
-
-        // Menambah stok obat
-        $obat = Obat::findOrFail($obat_id);
-        $obat->satuan += $jumlah;
-        $obat->save();
-
-        // Menambah stok barang
-        $barang = Barang::findOrFail($barang_id);
-        $barang->satuan += $jumlah;
-        $barang->save();
-    }
-
-}
-
-DetailTransaksi::create([
-    'transaksi_keluar_id' => $transaksi->id,
-    'total' => $request->total,
-]);
 
 
 
