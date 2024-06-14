@@ -7,6 +7,8 @@
                 <h4 class="m-15 font-weight-bold">{{ __('Laporan Kas') }}</h4>
             </div>
             <div class="card-body">
+               
+
                 <div class="card-header py-3">
                     <h5 class="m-15 font-weight-bold">{{ __('Kas Masuk') }}</h5>
                 </div>
@@ -51,8 +53,6 @@
                 </form>
                 <br />
                 <br />
-
-
             </div>
         </div>
     </div>

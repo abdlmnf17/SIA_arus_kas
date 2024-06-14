@@ -99,7 +99,7 @@ class UserController extends Controller
 
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required','string', 'min:8', 'confirmed'],
             'role' => ['required', 'string'],
 
         ]);
@@ -107,7 +107,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $user->update([
-            'name' => $validatedData['name'],
+            'username' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
             'role' => $validatedData['role'],

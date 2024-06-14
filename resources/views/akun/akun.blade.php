@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+$role = auth()->user()->role;
+@endphp
 <div class="col-lg-10 mb-10 mx-auto">
     <!-- Project Card Example -->
     <div class="card shadow mb-4">
@@ -29,7 +32,9 @@
                         <th style="width: 30%">Nama Akun</th>
                         <th style="width: 20%">Jenis</th>
                         <th style="width: 20%">Total</th>
+                        @if ($role === 'pemilik')
                         <th style="width: 25%">Aksi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -40,13 +45,17 @@
                         <td>{{ $akunItem->jenis }}</td>
                         <td>Rp. {{ number_format($akunItem->total, '2',',','.')}}</td>
                         <td>
+
+                            @if ($role === 'pemilik')
                             <a href="{{ route('akun.edit', $akunItem->id) }}" class="btn btn-sm btn-warning">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
+
                             <!-- Tombol Hapus -->
                             <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirmDeleteModal{{ $akunItem->id }}">
                                 <i class="fas fa-trash"></i> Hapus
                             </button>
+                            @endif
                         </td>
                     </tr>
 

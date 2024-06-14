@@ -22,7 +22,7 @@
                                     <select id="role" name="role" class="form-control" required>
                                         <option value="">--Pilih Roles--</option>
                                         <option value="admin">Admin</option>
-                                        <option value="user">User</option>
+                                        <option value="pemilik">Pemilik</option>
                                         </select>
 
                                     @error('role')
@@ -36,7 +36,7 @@
                                 <label for="name" class="col-md-4 col-form-label text-md-end">Nama</label>
 
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $user->username }}">
+                                    <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $user->username }}" required>
 
                                     @error('name')
                                         <span class="invalid-feedback" role="alert">
@@ -64,7 +64,7 @@
                                 <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{ $user->password }}">
+                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Masukan password untuk konfirmasi" required>
 
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
@@ -78,7 +78,7 @@
                                 <label for="password-confirm" class="col-md-4 col-form-label text-md-end">Konfirmasi Password</label>
 
                                 <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" value="{{ $user->password }}">
+                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="Ulangi password" required>
                                 </div>
                             </div>
 

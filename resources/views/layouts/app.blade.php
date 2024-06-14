@@ -80,34 +80,41 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Data Master</h6>
-                        @if ($role === 'admin')
-                            <a class="collapse-item" href="/user">User</a>
-                        @endif
-                        <a class="collapse-item" href="/pasien">Pasien</a>
-                        <a class="collapse-item" href="/pemasok">Pemasok</a>
-                        @if ($role === 'admin')
+                        @if ($role === 'pemilik')
+                            <a class="collapse-item" href="/user">Hak Akses User</a>
                             <a class="collapse-item" href="/akun">Data Akun</a>
                         @endif
+                        @if ($role === 'admin')
+                            <a class="collapse-item" href="/pasien">Pasien</a>
+                            <a class="collapse-item" href="/pemasok">Pemasok</a>
+                        @endif
+
+
+
                     </div>
                 </div>
             </li>
             <li class="nav-item">
+                @if ($role === 'admin')
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsetri"
                     aria-expanded="true" aria-controls="collapsetri">
                     <i class="fas fa-archive"></i>
-                    <span>Data Stok</span>
+
+                        <span>Data Stok</span>
+
 
                 </a>
-
+                @endif
 
                 <div id="collapsetri" class="collapse" aria-labelledby="headingtri" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Data Stok</h6>
+                        @if ($role === 'admin')
+                            <h6 class="collapse-header">Data Stok</h6>
 
-                        <a class="collapse-item" href="/obat">Data Obat</a>
+                            <a class="collapse-item" href="/obat">Data Obat</a>
 
-                        <a class="collapse-item" href="/barang">Barang</a>
-
+                            <a class="collapse-item" href="/barang">Barang</a>
+                        @endif
 
                     </div>
                 </div>
@@ -124,8 +131,13 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Data Transaksi</h6>
+                        @if ($role === 'admin')
                         <a class="collapse-item" href="/transaksi_masuk">Kas Masuk</a>
+                        @endif
+                        @if ($role === 'pemilik')
+
                         <a class="collapse-item" href="/transaksi_keluar">Kas Keluar</a>
+                        @endif
                     </div>
                 </div>
             </li>
@@ -380,7 +392,7 @@
                                 <span class="mr-2 d-none d-lg-inline text-dark-400">
 
                                     {{ Auth::user()->username }}</span>
-                                    <i class="fas fa-user-tie"></i>
+                                <i class="fas fa-user-tie"></i>
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

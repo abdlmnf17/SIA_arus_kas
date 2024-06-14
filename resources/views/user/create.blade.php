@@ -21,7 +21,7 @@
                                     <select id="role" name="role" class="form-control" required>
                                         <option value="">--Pilih Roles--</option>
                                         <option value="admin">Admin</option>
-                                        <option value="user">User</option>
+                                        <option value="pemilik">Pemilik</option>
                                         </select>
 
                                     @error('role')

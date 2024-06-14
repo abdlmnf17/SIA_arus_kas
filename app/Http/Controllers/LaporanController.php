@@ -5,13 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TransaksiMasuk;
 use App\Models\TransaksiKeluar;
+use App\Models\Akun;
 use PDF;
 
 class LaporanController extends Controller
 {
     public function index()
+
     {
-        return view('laporan.index');
+        $akunKas = Akun::where('nm_akun', 'Kas')->sum('total');
+        $akunPen = Akun::where('nm_akun', 'Pendapatan')->sum('total');
+        $akunPeng = Akun::where('nm_akun', 'Persediaan')->sum('total');
+        return view('laporan.index', compact('akunKas', 'akunPen', 'akunPeng'));
     }
 
 

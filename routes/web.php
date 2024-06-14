@@ -26,39 +26,37 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::resource('user', App\Http\Controllers\UserController::class);
     Route::resource('pasien', App\Http\Controllers\PasienController::class);
     Route::resource('pemasok', App\Http\Controllers\PemasokController::class);
     Route::resource('obat', App\Http\Controllers\ObatController::class);
     Route::resource('barang', App\Http\Controllers\BarangController::class);
-    Route::resource('akun', App\Http\Controllers\AkunController::class);
     Route::resource('transaksi_masuk', App\Http\Controllers\TransaksiMasukController::class);
-    Route::get('/search-pasien', [TransaksiMasukController::class, 'searchPasien'])->name('search.pasien');
-    Route::get('/search-pemasok', [TransaksiKeluarController::class, 'searchPemasok'])->name('search.pemasok');
 
-    Route::resource('jurnal', App\Http\Controllers\JurnalController::class);
+    Route::get('/search-pasien', [TransaksiMasukController::class, 'searchPasien'])->name('search.pasien');
 
     Route::get('/transaksi_masuk/{id}/print', [TransaksiMasukController::class, 'print'])->name('transaksi_masuk.print');
-    Route::get('/transaksi_keluar/{id}/print', [TransaksiKeluarController::class, 'print'])->name('transaksi_keluar.print');
+
 });
-
-
 Route::middleware(['auth'])->group(function () {
 
-    Route::resource('pasien', App\Http\Controllers\PasienController::class);
-    Route::resource('pemasok', App\Http\Controllers\PemasokController::class);
-    Route::resource('obat', App\Http\Controllers\ObatController::class);
-    Route::resource('barang', App\Http\Controllers\BarangController::class);
-    Route::resource('transaksi_masuk', App\Http\Controllers\TransaksiMasukController::class);
-    Route::resource('transaksi_keluar', App\Http\Controllers\TransaksiKeluarController::class);
-    Route::get('/search-pasien', [TransaksiMasukController::class, 'searchPasien'])->name('search.pasien');
-    Route::get('/search-pemasok', [TransaksiKeluarController::class, 'searchPemasok'])->name('search.pemasok');
     Route::resource('jurnal', App\Http\Controllers\JurnalController::class);
-    Route::get('/transaksi_masuk/{id}/print', [TransaksiMasukController::class, 'print'])->name('transaksi_masuk.print');
-    Route::get('/transaksi_keluar/{id}/print', [TransaksiKeluarController::class, 'print'])->name('transaksi_keluar.print');
 
     Route::get('/laporan', [App\Http\Controllers\LaporanController::class, 'index'])->name('laporan.index');
 
     Route::post('/laporan-pdf', [App\Http\Controllers\LaporanController::class, 'GeneratePdf'])->name('laporan.kas');
     Route::post('/laporan-kaskeluar-pdf', [App\Http\Controllers\LaporanController::class, 'kaskeluarPDF'])->name('laporan.kaskeluar');
+
+});
+
+
+Route::middleware(['auth', 'pemilik'])->group(function () {
+    Route::resource('user', App\Http\Controllers\UserController::class);
+    Route::resource('akun', App\Http\Controllers\AkunController::class);
+    Route::resource('transaksi_keluar', App\Http\Controllers\TransaksiKeluarController::class);
+
+    Route::get('/search-pemasok', [TransaksiKeluarController::class, 'searchPemasok'])->name('search.pemasok');
+
+    Route::get('/transaksi_keluar/{id}/print', [TransaksiKeluarController::class, 'print'])->name('transaksi_keluar.print');
+
+
 });
