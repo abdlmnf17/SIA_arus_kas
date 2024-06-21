@@ -64,16 +64,34 @@
                         </tr>
                     @endforeach
 
-                        <tr align="center">
-                            <td colspan="3"><strong>Total</strong></td>
-                            <td><strong>Rp. {{ number_format($totalDebit, 2, ',', '.') }}</strong></td>
-                            <td><strong>Rp. {{ number_format($totalKredit, 2, ',', '.') }}</strong></td>
-                        </tr>
+
                     </tbody>
 
                 </table>
 
             </div>
+
+
         </div>
+
+        <table class="table table-bordered" cellspacing="1"><br />
+            <thead>
+                <tr align="center">
+                    <th style="width: 15%">Total</th>
+                    <th style="width: 20%">Debit</th>
+                    <th style="width: 25%">Kredit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr align="center">
+                    <td><strong>Total Jumlah</strong></td>
+                    <td><strong>Rp. {{ number_format($totalDebit, 2, ',', '.') }}</strong></td>
+                    <td><strong>Rp. {{ number_format($totalKredit, 2, ',', '.') }}</strong></td>
+                </tr>
+
+
+            </tbody>
+
+        </table>
     </div>
 @endsection
