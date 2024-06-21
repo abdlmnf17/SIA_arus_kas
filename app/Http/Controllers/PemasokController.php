@@ -21,7 +21,7 @@ class PemasokController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nm_pemasok' => 'required',
+            'nm_pemasok' => 'required|regex:/^[a-zA-Z\s]+$/',
             'alamat' => 'required',
             'keterangan' => 'nullable',
         ]);
@@ -45,7 +45,7 @@ class PemasokController extends Controller
     public function update(Request $request, Pemasok $pemasok)
     {
         $request->validate([
-            'nm_pemasok' => 'required',
+            'nm_pemasok' => 'required|regex:/^[a-zA-Z\s]+$/',
             'alamat' => 'required',
             'keterangan' => 'nullable',
         ]);

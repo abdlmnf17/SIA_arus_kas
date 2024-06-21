@@ -21,7 +21,7 @@ class PasienController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nm_pasien' => 'required',
+            'nm_pasien' => 'required|regex:/^[a-zA-Z\s]+$/',
             'umur' => 'required',
             'alamat' => 'required',
             'tensi' => 'required',
@@ -46,7 +46,7 @@ class PasienController extends Controller
     public function update(Request $request, Pasien $pasien)
     {
         $request->validate([
-            'nm_pasien' => 'required',
+            'nm_pasien' => 'required|regex:/^[a-zA-Z\s]+$/',
             'umur' => 'required',
             'alamat' => 'required',
             'tensi' => 'required',
