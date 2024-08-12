@@ -91,7 +91,7 @@ class JurnalController extends Controller
             }
         }
 
-       
+
 
         return redirect()->route('jurnal.index')->with('success', 'Entri jurnal berhasil disimpan.');
     }

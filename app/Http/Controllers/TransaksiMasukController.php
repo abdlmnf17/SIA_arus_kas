@@ -11,6 +11,7 @@ use App\Models\DetailTransaksi;
 use App\Models\Jurnal;
 use PDF;
 
+
 class TransaksiMasukController extends Controller
 {
     public function index()
@@ -24,14 +25,13 @@ class TransaksiMasukController extends Controller
     {
         $obat = Obat::all();
         $pasien = Pasien::all();
-        // Generate nomor transaksi
-        $tanggal = now(); // atau Anda dapat mengatur tanggal sesuai kebutuhan
+
+        $tanggal = now();
         $no_trans = "KASMASUK/" . $tanggal->format('m-Y') . "/";
 
-        // Cari nomor transaksi terakhir dari database
         $last_trans = TransaksiMasuk::where('no_trans', 'like', $no_trans . '%')->orderBy('created_at', 'desc')->first();
 
-        // Jika nomor transaksi sudah ada di database, tambahkan angka di belakangnya
+
         if ($last_trans) {
             $last_no = explode('/', $last_trans->no_trans);
             $last_num = intval(end($last_no));
@@ -44,15 +44,19 @@ class TransaksiMasukController extends Controller
         return view('transaksi_masuk.create', compact('obat', 'pasien', 'no_trans'));
     }
 
+
     public function store(Request $request)
     {
         $messages = [
             'required' => ':attribute wajib diisi.',
             'unique' => ':attribute sudah terdaftar. Silakan input yang lain.',
             'max' => 'Maksimal :max karakter.',
+            'min' => ':attribute harus minimal :min.',
+            'numeric' => ':attribute harus berupa angka.',
+            'date' => ':attribute harus berupa tanggal yang valid.',
+            'exists' => ':attribute tidak ditemukan.',
         ];
 
-        // Validasi request
         $request->validate([
             'tgl' => 'required|date',
             'pasien_id' => 'required|integer|exists:pasien,id',
@@ -70,7 +74,22 @@ class TransaksiMasukController extends Controller
         ]);
 
 
-        // Membuat transaksi masuk
+        $errors = [];
+
+        foreach ($request->obat_ids as $index => $obat_id) {
+            $jumlah = $request->jumlah[$index];
+            $obat = Obat::find($obat_id);
+
+            if (!$obat || $obat->satuan < $jumlah) {
+                $namaObat = $obat ? $obat->nm_obat : 'Unknown';
+                $errors[] = 'Stok tidak mencukupi untuk obat: ' . $namaObat;
+            }
+        }
+
+        if ($errors) {
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+
         $transaksi = TransaksiMasuk::create([
             'no_trans' => $request->no_trans,
             'keterangan' => $request->keterangan,
@@ -79,28 +98,26 @@ class TransaksiMasukController extends Controller
             'total' => $request->total,
         ]);
 
-        // Membuat detail masuk
         foreach ($request->obat_ids as $index => $obat_id) {
             $jumlah = $request->jumlah[$index];
+            $obat = Obat::findOrFail($obat_id);
 
             DetailMasuk::create([
                 'transaksi_masuk_id' => $transaksi->id,
                 'obat_id' => $obat_id,
+                'jumlah' => $jumlah,
             ]);
 
-            // Mengurangi stok obat
-            $obat = Obat::findOrFail($obat_id);
+
             $obat->satuan -= $jumlah;
             $obat->save();
         }
+
 
         DetailTransaksi::create([
             'transaksi_masuk_id' => $transaksi->id,
             'total' => $request->total,
         ]);
-
-
-
 
         return redirect()->route('transaksi_masuk.index')->with('success', 'Transaksi berhasil disimpan');
     }
@@ -114,22 +131,21 @@ class TransaksiMasukController extends Controller
 
 
     public function destroy($id)
-{
-    $transaksi_masuk = TransaksiMasuk::findOrFail($id);
+    {
+        $transaksi_masuk = TransaksiMasuk::findOrFail($id);
 
-    // Hapus semua entri terkait dalam tabel 'jurnal' yang merujuk ke entri dalam tabel 'detail_transaksi'
-    $transaksi_masuk->detailTransaksi()->each(function ($detailTransaksi) {
-        $detailTransaksi->jurnal()->delete();
-    });
 
-    // Hapus semua entri dalam tabel 'detail_transaksi' yang terkait dengan transaksi masuk ini
-    $transaksi_masuk->detailTransaksi()->delete();
+        $transaksi_masuk->detailTransaksi()->each(function ($detailTransaksi) {
+            $detailTransaksi->jurnal()->delete();
+        });
 
-    // Terakhir, hapus transaksi masuk itu sendiri
-    $transaksi_masuk->delete();
+        $transaksi_masuk->detailTransaksi()->delete();
 
-    return redirect()->route('transaksi_masuk.index')->with('success', 'Transaksi berhasil dihapus.');
-}
+
+        $transaksi_masuk->delete();
+
+        return redirect()->route('transaksi_masuk.index')->with('success', 'Transaksi berhasil dihapus.');
+    }
 
 
     public function searchPasien(Request $request)
@@ -146,3 +162,5 @@ class TransaksiMasukController extends Controller
         return $pdf->stream('invoice-transaksi.pdf');
     }
 }
+
+
