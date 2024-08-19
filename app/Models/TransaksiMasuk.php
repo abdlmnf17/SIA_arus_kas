@@ -14,6 +14,7 @@ class TransaksiMasuk extends Model
         'no_trans',
         'keterangan',
         'pasien_id',
+        'harga_periksa',
         'tgl',
         'total',
     ];

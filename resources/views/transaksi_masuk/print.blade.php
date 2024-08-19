@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
             background-color: #ffffff;
             color: #333;
         }
+
         .container {
             width: 80%;
             margin: 20px auto;
@@ -20,50 +22,66 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .header {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .header h1 {
             margin: 0;
         }
+
         .header p {
             margin: 0;
             color: #777;
         }
+
         .details {
             margin-bottom: 20px;
         }
+
         .details p {
             margin: 5px 0;
         }
+
         .details strong {
             display: inline-block;
             width: 150px;
         }
+
         .table-container {
             margin-bottom: 20px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid #ffffff;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             text-align: left;
         }
+
         th {
             background-color: #ffffff;
         }
+
         .total {
             text-align: right;
             margin-right: 10px;
             font-size: 1.2em;
         }
+
         .footer {
             text-align: center;
             margin-top: 20px;
@@ -72,11 +90,12 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <h1>Invoice Transaksi</h1>
-            <h2>{{ config('app.perusahaan', 'Laravel') }}</h2><br/>
+            <h2>{{ config('app.perusahaan', 'Laravel') }}</h2><br />
         </div>
 
         <div class="details">
@@ -103,6 +122,23 @@
                         <td>{{ $transaksi->keterangan }}</td>
 
 
+
+                    </tr>
+                    <tr>
+
+
+                        <td>Diagnosa: {{ $transaksi->pasien->diagnosa }}</td>
+
+
+
+                    </tr>
+                    <tr>
+
+
+                        <td>Keterangan Dosis: {{ $transaksi->pasien->keterangan_dosis }}</td>
+
+
+
                     </tr>
 
                 </tbody>
@@ -113,23 +149,31 @@
                 <thead>
                     <tr>
                         <th>Nama Obat</th>
-
                         <th>Harga Satuan</th>
-
+                        <th>Jumlah</th>
+                        <th>Total Harga</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($transaksi->detailMasuk as $detail)
+                    @foreach ($detailPeriksa as $detail)
+                        <tr>
+                            <td>{{ $detail->obat->nm_obat }}</td>
+                            <td>Rp. {{ number_format($detail->obat->harga, 2, ',', '.') }}</td>
+                            <td>{{ $detail->jumlah }}</td>
+                            <td>Rp. {{ number_format($detail->total_harga, 2, ',', '.') }}</td>
+                        </tr>
+                    @endforeach
                     <tr>
+                        <td>Harga Periksa</td>
+<td>-</td>
+<td>-</td>
+                            <td> Rp. {{ number_format($transaksi->harga_periksa, 2, ',', '.') }}</td>
 
-                        <td>{{ $detail->obat->nm_obat }}</td>
-
-                        <td>{{ number_format($detail->obat->harga, 2) }}</td>
 
                     </tr>
-                    @endforeach
                 </tbody>
             </table>
+
         </div>
 
         <div class="total">
@@ -141,4 +185,5 @@
         </div>
     </div>
 </body>
+
 </html>

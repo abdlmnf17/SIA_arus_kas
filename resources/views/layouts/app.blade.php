@@ -88,6 +88,9 @@
                             <a class="collapse-item" href="/pasien">Pasien</a>
                             <a class="collapse-item" href="/pemasok">Pemasok</a>
                         @endif
+                        @if ($role === 'pemeriksa')
+                            <a class="collapse-item" href="/periksa-pasien">Pasien</a>
+                        @endif
 
 
 
@@ -96,14 +99,14 @@
             </li>
             <li class="nav-item">
                 @if ($role === 'admin')
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsetri"
-                    aria-expanded="true" aria-controls="collapsetri">
-                    <i class="fas fa-archive"></i>
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsetri"
+                        aria-expanded="true" aria-controls="collapsetri">
+                        <i class="fas fa-archive"></i>
 
                         <span>Data Stok</span>
 
 
-                </a>
+                    </a>
                 @endif
 
                 <div id="collapsetri" class="collapse" aria-labelledby="headingtri" data-parent="#accordionSidebar">
@@ -122,21 +125,26 @@
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                    <span>Data Transaksi</span>
-                </a>
+                @if (in_array($role, ['admin', 'pemilik']))
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+                        aria-expanded="true" aria-controls="collapseUtilities">
+
+
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Data Transaksi</span>
+
+
+                    </a>
+                @endif
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Data Transaksi</h6>
                         @if ($role === 'admin')
-                        <a class="collapse-item" href="/transaksi_masuk">Kas Masuk</a>
+                            <a class="collapse-item" href="/transaksi_masuk">Kas Masuk</a>
                         @endif
                         @if ($role === 'pemilik')
-
-                        <a class="collapse-item" href="/transaksi_keluar">Kas Keluar</a>
+                            <a class="collapse-item" href="/transaksi_keluar">Kas Keluar</a>
                         @endif
                     </div>
                 </div>
@@ -146,9 +154,7 @@
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
-                Laporan
-            </div>
+
 
             <!-- Nav Item - Pages Collapse Menu -->
             {{-- <li class="nav-item">
@@ -172,16 +178,23 @@
             </li> --}}
 
             <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="/jurnal">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Entri Jurnal</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/laporan">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Laporan Kas</span></a>
-            </li>
+            @if (in_array($role, ['admin', 'pemilik']))
+                <div class="sidebar-heading">
+                    Laporan
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link" href="/jurnal">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>Entri Jurnal</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/laporan">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>Laporan Kas</span></a>
+                </li>
+            @endif
+
+
 
             <!-- Nav Item - Tables -->
             {{-- <li class="nav-item">

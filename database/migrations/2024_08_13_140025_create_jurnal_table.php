@@ -17,7 +17,7 @@ class CreateJurnalTable extends Migration
             $table->id();
             $table->string('keterangan'); // Keterangan
             $table->unsignedBigInteger('detail_transaksi_id'); // Foreign Key: detail_transaksi_id
-          
+
             $table->string('debit'); // Debit
             $table->string('kredit'); // Kredit
             $table->integer('total'); // Total

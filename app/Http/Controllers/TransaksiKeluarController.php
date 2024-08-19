@@ -125,22 +125,18 @@ class TransaksiKeluarController extends Controller
     }
 
     public function destroy($id)
-{
-    $transaksi_keluar = TransaksiKeluar::findOrFail($id);
+    {
+        $transaksi_keluar = TransaksiKeluar::findOrFail($id);
 
-    // Hapus semua entri terkait dalam tabel 'jurnal' yang merujuk ke entri dalam tabel 'detail_transaksi'
-    $transaksi_keluar->detailTransaksi()->each(function ($detailTransaksi) {
-        $detailTransaksi->jurnal()->delete();
-    });
+        // Hapus semua entri terkait dalam tabel 'jurnal' yang merujuk ke entri dalam tabel 'detail_transaksi'
+        $transaksi_keluar->detailTransaksi()->each(function ($detailTransaksi) {
+            $detailTransaksi->jurnal()->delete();
+        });
+        $transaksi_keluar->detailTransaksi()->delete();
+        $transaksi_keluar->delete();
 
-    // Hapus semua entri dalam tabel 'detail_transaksi' yang terkait dengan transaksi keluar ini
-    $transaksi_keluar->detailTransaksi()->delete();
-
-    // Terakhir, hapus transaksi keluar itu sendiri
-    $transaksi_keluar->delete();
-
-    return redirect()->route('transaksi_keluar.index')->with('success', 'Transaksi berhasil dihapus.');
-}
+        return redirect()->route('transaksi_keluar.index')->with('success', 'Transaksi berhasil dihapus.');
+    }
 
 
     public function searchPemasok(Request $request)

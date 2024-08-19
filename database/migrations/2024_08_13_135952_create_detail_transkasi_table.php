@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetailTransaksiTable extends Migration
+class CreateDetailTranskasiTable extends Migration
 {
     /**
      * Run the migrations.

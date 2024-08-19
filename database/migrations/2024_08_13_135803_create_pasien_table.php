@@ -19,7 +19,13 @@ class CreatePasienTable extends Migration
             $table->string('umur');
             $table->string('alamat');
             $table->string('tensi');
+            $table->string("no_antrian")->nullable();
+            $table->string("keluhan")->nullable();
+            $table->string("diagnosa")->nullable();
+            $table->string("keterangan_dosis")->nullable();
+            $table->integer("total")->nullable();
             $table->timestamps();
+      
         });
     }
 

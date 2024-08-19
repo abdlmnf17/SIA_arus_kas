@@ -20,4 +20,19 @@ class Obat extends Model
     {
         return $this->hasMany(DetailKeluar::class);
     }
+    public function detailperiksa()
+    {
+        return $this->hasMany(DetailPeriksa::class);
+    }
+    public function pasien()
+    {
+        return $this->hasMany(Pasien::class);
+    }
+
+    // public function pasien()
+    // {
+    //     return $this->belongsToMany(Pasien::class, 'obat_id', 'pasien_id')
+    //                 ->withPivot('total') // Jika ada kolom tambahan di tabel pivot
+    //                 ->withTimestamps();
+    // }
 }

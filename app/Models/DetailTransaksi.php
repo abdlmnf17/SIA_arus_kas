@@ -17,7 +17,7 @@ class DetailTransaksi extends Model
 
     ];
 
-    
+
 
     public function transaksiMasuk()
     {
@@ -33,6 +33,11 @@ class DetailTransaksi extends Model
     public function jurnal()
     {
         return $this->hasMany(Jurnal::class);
+    }
+
+    public function obat()
+    {
+        return $this->belongsTo(Obat::class);
     }
 
 

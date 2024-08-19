@@ -16,10 +16,9 @@ class CreateDetailMasukTable extends Migration
         Schema::create('detail_masuk', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('transaksi_masuk_id');
-            $table->unsignedBigInteger('obat_id');
             $table->timestamps();
             $table->foreign('transaksi_masuk_id')->references('id')->on('transaksi_masuk')->onDelete('cascade');
-            $table->foreign('obat_id')->references('id')->on('obat')->onDelete('cascade');
+
         });
     }
 

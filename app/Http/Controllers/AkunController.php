@@ -29,7 +29,7 @@ class AkunController extends Controller
         Akun::create($request->all());
 
         return redirect()->route('akun.index')
-                        ->with('success', 'Akun berhasil disimpan.');
+            ->with('success', 'Akun berhasil disimpan.');
     }
 
     public function show(Akun $akun)
@@ -53,7 +53,7 @@ class AkunController extends Controller
         $akun->update($request->all());
 
         return redirect()->route('akun.index')
-                        ->with('success', 'Akun berhasil diperbarui.');
+            ->with('success', 'Akun berhasil diperbarui.');
     }
 
     public function destroy(Akun $akun)
@@ -61,6 +61,6 @@ class AkunController extends Controller
         $akun->delete();
 
         return redirect()->route('akun.index')
-                        ->with('success', 'Akun berhasil dihapus.');
+            ->with('success', 'Akun berhasil dihapus.');
     }
 }
